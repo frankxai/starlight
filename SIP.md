@@ -1,8 +1,11 @@
 # SIP — Adopted from `starlightintelligence.org/protocol`
 
 **Pinned version:** `v1.1.0`
+**Pinned commit:** [`d69374dbf17432d37a82499edc6f40a90194a51e`](https://github.com/frankxai/Starlight-Intelligence-System/blob/d69374dbf17432d37a82499edc6f40a90194a51e/SIP.md) (canonical SIP.md at adoption time)
 **Substrate source of truth:** [`frankxai/Starlight-Intelligence-System`](https://github.com/frankxai/Starlight-Intelligence-System), file `SIP.md`.
 **Canonical URL:** [starlightintelligence.org/protocol](https://starlightintelligence.org/protocol)
+
+> **Why pin a commit?** The canonical SIP.md is mutable — Frank Riemer / Starlight Holding BV updates it as the protocol evolves. This kit pins to the commit you adopted. When you upgrade to a newer SIP version, bump the pin and re-attest. SIP semver guarantees a 90-day deprecation window on breaking changes (per SIP § Versioning), so you have time. **Fail-closed verification CI workflow lands in adoption kit v0.2** (per /openclaw-audit CRITICAL 3 remediation).
 
 ## What this means
 
