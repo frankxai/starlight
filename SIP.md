@@ -5,7 +5,7 @@
 **Substrate source of truth:** [`frankxai/Starlight-Intelligence-System`](https://github.com/frankxai/Starlight-Intelligence-System), file `SIP.md`.
 **Canonical URL:** [starlightintelligence.org/protocol](https://starlightintelligence.org/protocol)
 
-> **Why pin a commit?** The canonical SIP.md is mutable — Frank Riemer / Starlight Holding BV updates it as the protocol evolves. This kit pins to the commit you adopted. When you upgrade to a newer SIP version, bump the pin and re-attest. SIP semver guarantees a 90-day deprecation window on breaking changes (per SIP § Versioning), so you have time. **Fail-closed verification CI workflow lands in adoption kit v0.2** (per /openclaw-audit CRITICAL 3 remediation).
+> **Why pin a commit?** The canonical SIP.md is mutable — Frank Riemer updates it as the protocol evolves. This kit pins to the commit you adopted. When you upgrade to a newer SIP version, bump the pin and re-attest. SIP semver guarantees a 90-day deprecation window on breaking changes (per SIP § Versioning), so you have time. **Fail-closed verification CI workflow lands in adoption kit v0.2** (per /openclaw-audit CRITICAL 3 remediation).
 
 ## What this means
 
@@ -19,9 +19,9 @@ The full spec — including Layers 3 (MCP registry), 4 (command taxonomy), 6 (ar
 
 ## License terms (inherited)
 
-- **SIP spec itself:** MIT (Frank Riemer / Starlight Holding BV).
+- **SIP spec itself:** MIT (Frank Riemer).
 - **Reference command implementations** (`.claude/commands/sip-attest.md`): MIT.
-- **Arcanea canon** (if you adopt it via `CANON.md`): CC-BY-NC 4.0, © Arcanea BV.
+- **Arcanea canon** (if you adopt it via `CANON.md`): CC-BY-NC 4.0, © Frank Riemer.
 - **This repo's content** (whatever you build): owned by you, licensed per your `LICENSE` file.
 
 ## Worked example — your first attestation
