@@ -1,3 +1,5 @@
 # Byte-exact: the receipt pins sha256(sip-profile.json) and the attestation subject
 # is its digest, so line endings must not change between checkouts.
 sip-profile.json -text
+# The profile claims sip/ is byte-identical to upstream; keep LF on every checkout.
+sip/**/*.mjs text eol=lf

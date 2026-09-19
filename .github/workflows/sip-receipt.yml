@@ -13,8 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write      # Sigstore keyless signing (used on push to main only)
-      attestations: write  # record the attestation against this repository
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -46,8 +44,26 @@ jobs:
           name: sip-receipt
           path: sip-receipt.json
 
+  # Only this job can sign, and it only exists on push to main after the receipt
+  # job passed. Pull requests never get id-token or attestations permissions.
+  attest:
+    needs: receipt
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write      # Sigstore keyless signing
+      attestations: write  # record the attestation against this repository
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: sip-receipt
+
       - name: Attest receipt (Sigstore, public transparency log)
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/attest@ce27ba3b4a9a139d9a20a4a07d69fabb52f1e5bc # v2
         with:
           subject-path: sip-profile.json
