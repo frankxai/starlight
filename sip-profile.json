@@ -1,0 +1,136 @@
+{
+  "sipGraphVersion": "0.1.0",
+  "profile": {
+    "id": "sip:profile:starlight-kit",
+    "subject": "github.com/frankxai/starlight",
+    "declaredBy": "sip:identity:frank-riemer",
+    "generatedAt": "2026-09-19T00:00:00Z",
+    "note": "The kit's own profile. Six nodes: the maintainer, the kit, one claim, the file it rests on, the conformance run, and the public projection. If you fork the kit, replace every node with your own."
+  },
+  "nodes": [
+    {
+      "id": "sip:identity:frank-riemer",
+      "type": "Identity",
+      "version": "1.0.0",
+      "owner": "sip:identity:frank-riemer",
+      "visibility": "public",
+      "provenance": { "origin": "authored", "at": "2026-04-23T01:24:52Z", "sources": [] },
+      "evaluation": { "rule": "sip:evaluation:conform-run" },
+      "label": "Frank Riemer, maintainer of this kit",
+      "body": { "kind": "person", "handle": "github.com/frankxai" }
+    },
+    {
+      "id": "sip:artifact:starlight-kit",
+      "type": "Artifact",
+      "version": "0.2.0",
+      "owner": "sip:identity:frank-riemer",
+      "visibility": "public",
+      "provenance": { "origin": "authored", "at": "2026-04-23T01:24:52Z", "sources": [] },
+      "evaluation": { "rule": "sip:evaluation:conform-run" },
+      "label": "SIP adoption kit",
+      "body": { "locator": "https://github.com/frankxai/starlight" }
+    },
+    {
+      "id": "sip:source:pinned-commit",
+      "type": "Source",
+      "version": "1.0.0",
+      "owner": "sip:identity:frank-riemer",
+      "visibility": "public",
+      "provenance": { "origin": "imported", "at": "2026-09-19T00:00:00Z", "method": "git rev-parse HEAD of the Starlight-Intelligence-System checkout the files were copied from", "sources": [] },
+      "evaluation": { "rule": "sip:evaluation:conform-run" },
+      "label": "sip/PINNED_COMMIT",
+      "body": { "locator": "https://github.com/frankxai/starlight/blob/main/sip/PINNED_COMMIT" }
+    },
+    {
+      "id": "sip:claim:checker-vendored-from-pinned-commit",
+      "type": "Claim",
+      "version": "1.0.0",
+      "owner": "sip:identity:frank-riemer",
+      "visibility": "public",
+      "provenance": { "origin": "derived", "at": "2026-09-19T00:00:00Z", "method": "copy per protocol/INSTALL.md step 1", "sources": ["sip:source:pinned-commit"] },
+      "evaluation": { "rule": "sip:evaluation:conform-run" },
+      "label": "The checker in sip/ is the upstream protocol code at the pinned commit",
+      "body": { "statement": "sip/conform.mjs, sip/sign.mjs, sip/verify.mjs and sip/lib/{graph,mask,dsse}.mjs are byte-identical copies of protocol/ in frankxai/Starlight-Intelligence-System at the commit named in sip/PINNED_COMMIT. Anyone can check this by diffing against that commit." }
+    },
+    {
+      "id": "sip:evaluation:conform-run",
+      "type": "Evaluation",
+      "version": "1.0.0",
+      "owner": "sip:identity:frank-riemer",
+      "visibility": "public",
+      "provenance": { "origin": "observed", "at": "2026-09-19T00:00:00Z", "method": ".github/workflows/sip-receipt.yml", "sources": [] },
+      "evaluation": { "rule": "sip:evaluation:conform-run" },
+      "label": "SIP graph conformance run on this profile",
+      "body": { "method": "node sip/conform.mjs sip-profile.json --json sip-receipt.json, on every push and pull request; the job fails unless the verdict is PASS", "result": "pass" }
+    },
+    {
+      "id": "sip:projection:public",
+      "type": "Projection",
+      "version": "1.0.0",
+      "owner": "sip:identity:frank-riemer",
+      "visibility": "public",
+      "provenance": { "origin": "derived", "at": "2026-09-19T00:00:00Z", "method": "projection", "sources": [] },
+      "evaluation": { "rule": "sip:evaluation:conform-run" },
+      "label": "Public projection: the whole profile",
+      "body": {
+        "audience": "public",
+        "include": [
+          "sip:projection:public",
+          "sip:identity:frank-riemer",
+          "sip:artifact:starlight-kit",
+          "sip:source:pinned-commit",
+          "sip:claim:checker-vendored-from-pinned-commit",
+          "sip:evaluation:conform-run"
+        ],
+        "redacted": [],
+        "redactFields": []
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "sip:edge:frank-asserts-vendoring",
+      "type": "asserts",
+      "from": "sip:identity:frank-riemer",
+      "to": "sip:claim:checker-vendored-from-pinned-commit",
+      "version": "1.0.0",
+      "owner": "sip:identity:frank-riemer",
+      "visibility": "public",
+      "provenance": { "origin": "authored", "at": "2026-09-19T00:00:00Z", "sources": [] },
+      "evaluation": { "rule": "sip:evaluation:conform-run" }
+    },
+    {
+      "id": "sip:edge:vendoring-derives-pinned-commit",
+      "type": "derivedFrom",
+      "from": "sip:claim:checker-vendored-from-pinned-commit",
+      "to": "sip:source:pinned-commit",
+      "version": "1.0.0",
+      "owner": "sip:identity:frank-riemer",
+      "visibility": "public",
+      "provenance": { "origin": "derived", "at": "2026-09-19T00:00:00Z", "sources": [] },
+      "evaluation": { "rule": "sip:evaluation:conform-run" }
+    },
+    {
+      "id": "sip:edge:conform-evaluates-kit",
+      "type": "evaluates",
+      "from": "sip:evaluation:conform-run",
+      "to": "sip:artifact:starlight-kit",
+      "version": "1.0.0",
+      "owner": "sip:identity:frank-riemer",
+      "visibility": "public",
+      "provenance": { "origin": "observed", "at": "2026-09-19T00:00:00Z", "sources": [] },
+      "evaluation": { "rule": "sip:evaluation:conform-run" }
+    },
+    {
+      "id": "sip:edge:public-projects-claim",
+      "type": "projects",
+      "from": "sip:projection:public",
+      "to": "sip:claim:checker-vendored-from-pinned-commit",
+      "version": "1.0.0",
+      "owner": "sip:identity:frank-riemer",
+      "visibility": "public",
+      "provenance": { "origin": "derived", "at": "2026-09-19T00:00:00Z", "sources": [] },
+      "evaluation": { "rule": "sip:evaluation:conform-run" }
+    }
+  ]
+}

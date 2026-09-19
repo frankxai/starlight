@@ -1,0 +1,3 @@
+# Byte-exact: the receipt pins sha256(sip-profile.json) and the attestation subject
+# is its digest, so line endings must not change between checkouts.
+sip-profile.json -text

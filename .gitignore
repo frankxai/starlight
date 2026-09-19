@@ -2,3 +2,5 @@ node_modules/
 .starlight/
 private/
 .env*
+# SIP signing: the private key never enters git (sign.mjs keygen also writes .sip/.gitignore).
+.sip/sip-signing.key
