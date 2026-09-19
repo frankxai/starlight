@@ -1,0 +1,71 @@
+name: SIP receipt
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  receipt:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '20'
+
+      # The profile's one claim: sip/ is byte-identical to upstream protocol/ at PINNED_COMMIT.
+      - name: Check vendored checker against sip/PINNED_COMMIT
+        run: |
+          set -euo pipefail
+          pinned="$(tr -d '[:space:]' < sip/PINNED_COMMIT)"
+          git init -q "$RUNNER_TEMP/sis"
+          git -C "$RUNNER_TEMP/sis" fetch -q --depth 1 https://github.com/frankxai/Starlight-Intelligence-System.git "$pinned"
+          git -C "$RUNNER_TEMP/sis" checkout -q FETCH_HEAD
+          for f in conform.mjs sign.mjs verify.mjs lib/graph.mjs lib/mask.mjs lib/dsse.mjs; do
+            cmp "sip/$f" "$RUNNER_TEMP/sis/protocol/$f"
+            echo "identical  sip/$f"
+          done
+
+      # Exit 0 = PASS. Any FAIL fails the job, so no receipt is attested.
+      - name: Conform
+        run: node sip/conform.mjs sip-profile.json --json sip-receipt.json
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: sip-receipt
+          path: sip-receipt.json
+
+  # Only this job can sign, and it only exists on push to main after the receipt
+  # job passed. Pull requests never get id-token or attestations permissions.
+  attest:
+    needs: receipt
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write      # Sigstore keyless signing
+      attestations: write  # record the attestation against this repository
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: sip-receipt
+
+      - name: Attest receipt (Sigstore, public transparency log)
+        uses: actions/attest@ce27ba3b4a9a139d9a20a4a07d69fabb52f1e5bc # v2
+        with:
+          subject-path: sip-profile.json
+          predicate-type: https://starlightintelligence.org/protocol/receipt/v0.1.0
+          predicate-path: sip-receipt.json
